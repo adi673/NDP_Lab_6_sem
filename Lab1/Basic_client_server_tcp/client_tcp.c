@@ -52,13 +52,16 @@ main()
 			break;
 		}
 		memset(buff, '\0', sizeof(buff));
+		printf(" \n waiting Here \n");
 		recedbytes=recv(sockfd,buff,sizeof(buff),0);
+		printf(" \n waiting Done \n");
 		printf ("%s \n", buff);
 		
 		if (buff[0] == 's' && buff[1] == 't' && buff[2] == 'o' && buff[3] == 'p')
 		{
 			break;
 		}
+		printf("\n loop completed \n");
 	}
 	close(sockfd);
 }
