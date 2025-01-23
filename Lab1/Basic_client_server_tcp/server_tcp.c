@@ -19,7 +19,7 @@ main()
 	sockfd=socket(AF_INET,SOCK_STREAM,0);
 	printf("\n Intialized Socket \n");
 	if(sockfd==-1){
-		printf("\nSocket creation error");
+		printf("\nSocket creation error\n");
 	}
 
 	serveraddr.sin_family=AF_INET;
@@ -28,7 +28,7 @@ main()
 	retval=bind(sockfd,(struct sockaddr*)&serveraddr,sizeof(serveraddr));
 	printf("\n Binding complete \n");
 	if(retval==1){
-		printf("Binding error");
+		printf("\nBinding error\n");
 		close(sockfd);
 	}
 
@@ -39,7 +39,7 @@ main()
 	}
 	actuallen=sizeof(clientaddr);
 	newsockfd=accept(sockfd,(struct sockaddr*)&clientaddr,&actuallen);
-	printf("\n Accpeted Client Connection");
+	printf("\n Accpeted Client Connection \n");
 	if(newsockfd==-1){
 		close(sockfd);
 	}
@@ -49,6 +49,7 @@ main()
 		memset(buff, '\0', sizeof(buff));
 		printf(" \n waiting Here \n");
 		recedbytes=recv(newsockfd,buff,sizeof(buff),0);
+		printf(" \n waiting Done \n");
 		if(recedbytes==-1){
 			close(sockfd);
 			close(newsockfd);
@@ -71,7 +72,7 @@ main()
 		if (buff[0] == 's' && buff[1] == 't' && buff[2] == 'o' && buff[3] == 'p'){
 			break;
 		}
-		
+		printf("\n loop completed \n" );
 	}
 	close(sockfd);
 	close(newsockfd);
