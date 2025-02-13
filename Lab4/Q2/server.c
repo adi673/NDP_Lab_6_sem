@@ -3,7 +3,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <netinet/in.h>
 
 #define MAXSIZE 100
@@ -15,7 +14,7 @@ struct dns_entry {
     char ip_address[MAXSIZE];
 };
 
-// Sample DNS entries (you can modify or expand this as needed)
+// Sample DNS entries
 struct dns_entry dns_db[MAXDOMAINS] = {
     {"google.com", "8.8.8.8"},
     {"example.com", "93.184.216.34"},
@@ -57,36 +56,46 @@ int main() {
     }
 
     // Listen for incoming connections
-    listen(sockfd, 5);
+    if (listen(sockfd, 5) == -1) {
+        perror("Listen failed");
+        exit(1);
+    }
 
-    printf("Waiting for clients...\n");
+    printf("Server is running. Waiting for clients...\n");
 
     while (1) {
         // Accept client connection
         newsockfd = accept(sockfd, (struct sockaddr*)&clientaddr, &addrlen);
         if (newsockfd < 0) {
             perror("Accept failed");
-            continue; // Continue to accept other clients even if one fails
+            continue;
         }
 
-        printf("Connected to client\n");
+        printf("Connected to a client.\n");
 
-        // Receive domain name from client
-        memset(buffer, 0, MAXSIZE);
-        recv(newsockfd, buffer, MAXSIZE, 0);
-        printf("Received domain name: %s\n", buffer);
+        while (1) {
+            // Receive domain name from client
+            memset(buffer, 0, MAXSIZE);
+            int bytes_received = recv(newsockfd, buffer, MAXSIZE - 1, 0);
+            if (bytes_received <= 0) {
+                printf("Client disconnected.\n");
+                break;
+            }
+            buffer[bytes_received] = '\0';  // Ensure null termination
+            printf("Received domain name: %s\n", buffer);
 
-        // Look up domain name in the DNS database
-        char* ip = lookup_domain(buffer);
-        if (ip) {
-            send(newsockfd, ip, strlen(ip), 0);  // Send IP address to client
-        } else {
-            send(newsockfd, "Domain not found", 17, 0);  // Send "not found" message
+            // Look up domain name in the DNS database
+            char *ip = lookup_domain(buffer);
+            if (ip) {
+                send(newsockfd, ip, strlen(ip) + 1, 0);  // Send IP address
+            } else {
+                send(newsockfd, "Domain not found", strlen("Domain not found") + 1, 0);
+            }
         }
 
-        close(newsockfd); // Close the connection with this client
+        close(newsockfd);  // Close connection with this client
     }
 
-    close(sockfd); // Close the server socket (although the loop is infinite)
+    close(sockfd);  // Close the server socket
     return 0;
 }

@@ -3,7 +3,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <netinet/in.h>
 
 #define MAXSIZE 100
@@ -35,7 +34,7 @@ int main() {
         // Get domain name from user
         printf("Enter domain name (or type 'exit' to quit): ");
         fgets(domain, MAXSIZE, stdin);
-        domain[strlen(domain) - 1] = '\0';  // Remove newline character
+        domain[strcspn(domain, "\n")] = '\0';  // Remove newline character
 
         // Exit if the user types "exit"
         if (strcmp(domain, "exit") == 0) {
@@ -43,11 +42,19 @@ int main() {
         }
 
         // Send domain name to server
-        send(sockfd, domain, strlen(domain), 0);
+        if (send(sockfd, domain, strlen(domain) + 1, 0) == -1) {
+            perror("Send failed");
+            break;
+        }
 
         // Receive IP address or error message from server
         memset(buffer, 0, MAXSIZE);
-        recv(sockfd, buffer, MAXSIZE, 0);
+        int bytes_received = recv(sockfd, buffer, MAXSIZE - 1, 0);
+        if (bytes_received <= 0) {
+            printf("Connection closed by server.\n");
+            break;
+        }
+        buffer[bytes_received] = '\0';  // Ensure null termination
         printf("Received IP address: %s\n", buffer);
     }
 
