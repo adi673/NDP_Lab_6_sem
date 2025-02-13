@@ -16,15 +16,15 @@ void swap(char *x, char *y) {
 }
 
 // Recursive function to generate all permutations of the string
-void permute(char *str, int l, int r, char *result) {
+void permute(char *str, int l, int r, int client_sock) {
     if (l == r) {
-        // Add the permutation to the result
-        strcat(result, str);
-        strcat(result, "\n");  // Add newline between permutations
+        char buffer[MAXSIZE];  // Temporary buffer for sending each permutation
+        snprintf(buffer, sizeof(buffer), "%s\n", str); // Format the output safely
+        send(client_sock, buffer, strlen(buffer), 0);  // Send each permutation separately
     } else {
         for (int i = l; i <= r; i++) {
             swap((str + l), (str + i)); // Swap to create a new permutation
-            permute(str, l + 1, r, result);
+            permute(str, l + 1, r, client_sock);
             swap((str + l), (str + i)); // Backtrack
         }
     }
@@ -35,7 +35,6 @@ int main() {
     struct sockaddr_un server_addr, client_addr;
     socklen_t client_len;
     char buffer[MAXSIZE];
-    char result[MAXSIZE * MAXSIZE] = "";  // Buffer to store all permutations
 
     // Create socket
     server_sock = socket(AF_UNIX, SOCK_STREAM, 0);
@@ -80,7 +79,7 @@ int main() {
     printf("Server connected to client\n");
 
     // Receive the string from the client
-    int n = recv(client_sock, buffer, MAXSIZE, 0);
+    int n = recv(client_sock, buffer, MAXSIZE - 1, 0);
     if (n == -1) {
         perror("Failed to receive data from client");
         close(client_sock);
@@ -91,11 +90,8 @@ int main() {
 
     printf("Received string: %s\n", buffer);
 
-    // Generate all permutations and store them in the result buffer
-    permute(buffer, 0, strlen(buffer) - 1, result);
-
-    // Send all permutations to the client in one go
-    send(client_sock, result, strlen(result), 0);
+    // Generate and send each permutation directly
+    permute(buffer, 0, strlen(buffer) - 1, client_sock);
 
     // Close the client and server sockets
     close(client_sock);
@@ -104,4 +100,3 @@ int main() {
 
     return 0;
 }
-
