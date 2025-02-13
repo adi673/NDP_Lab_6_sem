@@ -42,22 +42,24 @@ void handle_request(int client_sock)
         { // Solve linear equation (ax + b = 0)
             int a, b;
             double x;
+            char response[MAXSIZE]; // Use a clean buffer for response
+
             recv(client_sock, &a, sizeof(int), 0);
             recv(client_sock, &b, sizeof(int), 0);
 
-            memset(buffer, 0, sizeof(buffer)); // ✅ Clear buffer before use
-
             if (a == 0)
             {
-                snprintf(buffer, sizeof(buffer), "Invalid equation (a cannot be 0)");
+                snprintf(response, sizeof(response), "Invalid equation (a cannot be 0)");
             }
             else
             {
                 x = -(double)b / a;
-                snprintf(buffer, sizeof(buffer), "x = %.2f", x);
+                if (x == -0.00) // ✅ Fix for -0.00 appearing
+                    x = 0.00;
+                snprintf(response, sizeof(response), "x = %.2f", x);
             }
 
-            send(client_sock, buffer, strlen(buffer), 0);
+            send(client_sock, response, strlen(response) + 1, 0); // ✅ Send with null-terminator
             break;
         }
 
