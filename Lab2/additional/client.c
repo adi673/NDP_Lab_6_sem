@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 
 #define PORT 3388
-#define MAXSIZE 
+#define MAXSIZE 1024
 
 int main() {
     int sockfd;
@@ -35,9 +35,9 @@ int main() {
     while (1) {
         printf("\nEnter filename (or 'stop' to exit): ");
         fgets(filename, MAXSIZE, stdin);
-        send(sockfd, filename, strlen(filename), 0);
-
         filename[strcspn(filename, "\n")] = 0; // Remove newline
+
+        send(sockfd, filename, strlen(filename), 0);
         if (strcmp(filename, "stop") == 0) {
             break;
         }
