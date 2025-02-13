@@ -3,61 +3,74 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <netinet/in.h>
 
 #define PORT 3388
 #define MAXSIZE 1024
 
 int main() {
-    int sockfd, newsockfd;
-    struct sockaddr_in serveraddr, clientaddr;
-    socklen_t addrlen;
-    char filename[MAXSIZE], buffer[MAXSIZE];
+    int sockfd;
+    struct sockaddr_in server_addr;
+    char filename[MAXSIZE], buffer[MAXSIZE], option[2], search_str[MAXSIZE], replace_str[MAXSIZE];
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
         perror("Socket creation failed");
-        return 1;
+        exit(1);
     }
 
-    serveraddr.sin_family = AF_INET;
-    serveraddr.sin_port = htons(PORT);
-    serveraddr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(PORT);
+    server_addr.sin_addr.s_addr = INADDR_ANY;
 
-    if (bind(sockfd, (struct sockaddr*)&serveraddr, sizeof(serveraddr)) == -1) {
-        perror("Bind failed");
-        close(sockfd);
-        return 1;
+    if (connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
+        perror("Connection failed");
+        exit(1);
     }
 
-    listen(sockfd, 5);
-    printf("Server listening on port %d...\n", PORT);
+    printf("Enter filename: ");
+    fgets(filename, MAXSIZE, stdin);
+    send(sockfd, filename, strlen(filename), 0);
 
-    addrlen = sizeof(clientaddr);
-    newsockfd = accept(sockfd, (struct sockaddr*)&clientaddr, &addrlen);
-    if (newsockfd == -1) {
-        perror("Accept failed");
+    recv(sockfd, buffer, sizeof(buffer), 0);
+    printf("%s\n", buffer);
+    if (strcmp(buffer, "File not present") == 0) {
         close(sockfd);
-        return 1;
+        return 0;
     }
 
     while (1) {
-        memset(filename, 0, MAXSIZE);
-        recv(newsockfd, filename, MAXSIZE, 0);
-        if (strcmp(filename, "exit") == 0) break;
+        printf("\nMenu:\n1. Search\n2. Replace\n3. Reorder\n4. Exit\nEnter choice: ");
+        scanf("%s", option);
+        send(sockfd, option, sizeof(option), 0);
 
-        FILE *file = fopen(filename, "r");
-        if (!file) {
-            strcpy(buffer, "File not present");
-            send(newsockfd, buffer, strlen(buffer), 0);
-        } else {
-            strcpy(buffer, "1. Search 2. Replace 3. Reorder 4. Exit");
-            send(newsockfd, buffer, strlen(buffer), 0);
-            fclose(file);
+        if (option[0] == '1') { // Search
+            printf("Enter string to search: ");
+            scanf("%s", search_str);
+            send(sockfd, search_str, sizeof(search_str), 0);
+            recv(sockfd, buffer, sizeof(buffer), 0);
+            printf("%s\n", buffer);
+
+        } else if (option[0] == '2') { // Replace
+            printf("Enter string to replace: ");
+            scanf("%s", search_str);
+            printf("Enter new string: ");
+            scanf("%s", replace_str);
+            send(sockfd, search_str, sizeof(search_str), 0);
+            send(sockfd, replace_str, sizeof(replace_str), 0);
+            recv(sockfd, buffer, sizeof(buffer), 0);
+            printf("%s\n", buffer);
+
+        } else if (option[0] == '3') { // Reorder
+            recv(sockfd, buffer, sizeof(buffer), 0);
+            printf("%s\n", buffer);
+
+        } else if (option[0] == '4') { // Exit
+            break;
         }
     }
 
-    close(newsockfd);
     close(sockfd);
     return 0;
 }
