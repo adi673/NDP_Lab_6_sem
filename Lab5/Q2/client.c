@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 
 #define MAXSIZE 100
-#define PORT 12345
+#define PORT 12347
 
 int main() {
     int sockfd;

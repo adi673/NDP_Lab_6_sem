@@ -9,7 +9,7 @@
 #include <arpa/inet.h>
 
 #define MAXSIZE 100
-#define PORT 12345
+#define PORT 12347
 
 // Function to check if two strings are anagrams
 int areAnagrams(char *str1, char *str2) {
