@@ -9,7 +9,8 @@
 #define MAXSIZE 1024
 
 // Structure for book details
-typedef struct {
+typedef struct
+{
     char title[100];
     char author[100];
     char accession_number[20];
@@ -21,7 +22,8 @@ Book books[MAX_BOOKS];
 int book_count = 0;
 
 // Function to initialize books in server memory
-void initialize_books() {
+void initialize_books()
+{
     strcpy(books[0].title, "C Programming");
     strcpy(books[0].author, "Dennis Ritchie");
     strcpy(books[0].accession_number, "101");
@@ -44,8 +46,10 @@ void initialize_books() {
 }
 
 // Function to insert a new book
-void insert_book(char *book_info, int client_sock) {
-    if (book_count >= MAX_BOOKS) {
+void insert_book(char *book_info, int client_sock)
+{
+    if (book_count >= MAX_BOOKS)
+    {
         send(client_sock, "Book database is full.\n", 24, 0);
         return;
     }
@@ -59,12 +63,16 @@ void insert_book(char *book_info, int client_sock) {
 }
 
 // Function to delete a book by title
-void delete_book(char *title, int client_sock) {
+void delete_book(char *title, int client_sock)
+{
     int found = 0;
-    for (int i = 0; i < book_count; i++) {
-        if (strcmp(books[i].title, title) == 0) {
+    for (int i = 0; i < book_count; i++)
+    {
+        if (strcmp(books[i].title, title) == 0)
+        {
             found = 1;
-            for (int j = i; j < book_count - 1; j++) {
+            for (int j = i; j < book_count - 1; j++)
+            {
                 books[j] = books[j + 1];
             }
             book_count--;
@@ -78,14 +86,17 @@ void delete_book(char *title, int client_sock) {
 }
 
 // Function to display all books
-void display_books(int client_sock) {
+void display_books(int client_sock)
+{
     char buffer[MAXSIZE] = "";
-    if (book_count == 0) {
+    if (book_count == 0)
+    {
         send(client_sock, "No books available.\n", 21, 0);
         return;
     }
 
-    for (int i = 0; i < book_count; i++) {
+    for (int i = 0; i < book_count; i++)
+    {
         char book_info[256];
         snprintf(book_info, sizeof(book_info), "Title: %s, Author: %s, Accession No: %s, Pages: %d, Publisher: %s\n",
                  books[i].title, books[i].author, books[i].accession_number, books[i].total_pages, books[i].publisher);
@@ -96,15 +107,23 @@ void display_books(int client_sock) {
 }
 
 // Function to search books by title or author
-void search_book(char *query, int client_sock) {
+void search_book(char *query, int client_sock)
+{
     char buffer[MAXSIZE] = "";
     int found = 0;
 
-    for (int i = 0; i < book_count; i++) {
-        if (strstr(books[i].title, query) || strstr(books[i].author, query)) {
+    // Remove trailing newline (if any)
+    query[strcspn(query, "\n")] = 0;
+
+    for (int i = 0; i < book_count; i++)
+    {
+        if (strcasecmp(books[i].title, query) == 0 || strcasecmp(books[i].author, query) == 0)
+        {
             char book_info[256];
-            snprintf(book_info, sizeof(book_info), "Title: %s, Author: %s, Accession No: %s, Pages: %d, Publisher: %s\n",
-                     books[i].title, books[i].author, books[i].accession_number, books[i].total_pages, books[i].publisher);
+            snprintf(book_info, sizeof(book_info),
+                     "Title: %s, Author: %s, Accession No: %s, Pages: %d, Publisher: %s\n",
+                     books[i].title, books[i].author, books[i].accession_number,
+                     books[i].total_pages, books[i].publisher);
             strcat(buffer, book_info);
             found = 1;
         }
@@ -116,7 +135,8 @@ void search_book(char *query, int client_sock) {
     send(client_sock, buffer, strlen(buffer), 0);
 }
 
-int main() {
+int main()
+{
     int sockfd, client_sock;
     struct sockaddr_in server_addr, client_addr;
     socklen_t addr_size;
@@ -127,7 +147,8 @@ int main() {
 
     // Create socket
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0) {
+    if (sockfd < 0)
+    {
         perror("Socket creation failed");
         exit(1);
     }
@@ -138,7 +159,8 @@ int main() {
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
     // Bind socket
-    if (bind(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+    if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
+    {
         perror("Bind failed");
         exit(1);
     }
@@ -147,10 +169,12 @@ int main() {
     listen(sockfd, 5);
     printf("Server is listening on port %d...\n", PORT);
 
-    while (1) {
+    while (1)
+    {
         addr_size = sizeof(client_addr);
-        client_sock = accept(sockfd, (struct sockaddr*)&client_addr, &addr_size);
-        if (client_sock < 0) {
+        client_sock = accept(sockfd, (struct sockaddr *)&client_addr, &addr_size);
+        if (client_sock < 0)
+        {
             perror("Accept failed");
             continue;
         }
@@ -160,19 +184,30 @@ int main() {
         recv(client_sock, buffer, MAXSIZE, 0);
 
         // Process client request
-        if (strncmp(buffer, "INSERT", 6) == 0) {
+        if (strncmp(buffer, "INSERT", 6) == 0)
+        {
             insert_book(buffer + 7, client_sock);
-        } else if (strncmp(buffer, "DELETE", 6) == 0) {
+        }
+        else if (strncmp(buffer, "DELETE", 6) == 0)
+        {
             delete_book(buffer + 7, client_sock);
-        } else if (strncmp(buffer, "DISPLAY", 7) == 0) {
+        }
+        else if (strncmp(buffer, "DISPLAY", 7) == 0)
+        {
             display_books(client_sock);
-        } else if (strncmp(buffer, "SEARCH", 6) == 0) {
+        }
+        else if (strncmp(buffer, "SEARCH", 6) == 0)
+        {
             search_book(buffer + 7, client_sock);
-        } else if (strncmp(buffer, "EXIT", 4) == 0) {
+        }
+        else if (strncmp(buffer, "EXIT", 4) == 0)
+        {
             send(client_sock, "Goodbye!\n", 9, 0);
             close(client_sock);
             break;
-        } else {
+        }
+        else
+        {
             send(client_sock, "Invalid command.\n", 17, 0);
         }
 
