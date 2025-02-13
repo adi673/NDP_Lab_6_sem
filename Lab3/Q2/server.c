@@ -19,8 +19,8 @@ void swap(char *x, char *y) {
 void permute(char *str, int l, int r, int client_sock) {
     if (l == r) {
         char buffer[MAXSIZE];  // Temporary buffer for sending each permutation
-        snprintf(buffer, sizeof(buffer), "%s\n", str); // Format the output safely
-        send(client_sock, buffer, strlen(buffer), 0);  // Send each permutation separately
+        snprintf(buffer, sizeof(buffer), "%s\n", str);
+        send(client_sock, buffer, strlen(buffer), 0);
     } else {
         for (int i = l; i <= r; i++) {
             swap((str + l), (str + i)); // Swap to create a new permutation
@@ -59,44 +59,52 @@ int main() {
     }
 
     // Listen for incoming connections
-    if (listen(server_sock, 1) == -1) {
+    if (listen(server_sock, 5) == -1) {
         perror("Server listen failed");
         close(server_sock);
         exit(1);
     }
 
-    printf("Server waiting for connection...\n");
+    printf("Server waiting for connections...\n");
 
-    // Accept a client connection
-    client_len = sizeof(client_addr);
-    client_sock = accept(server_sock, (struct sockaddr *)&client_addr, &client_len);
-    if (client_sock == -1) {
-        perror("Server accept failed");
-        close(server_sock);
-        exit(1);
+    while (1) {
+        // Accept a client connection
+        client_len = sizeof(client_addr);
+        client_sock = accept(server_sock, (struct sockaddr *)&client_addr, &client_len);
+        if (client_sock == -1) {
+            perror("Server accept failed");
+            continue; // Keep server running even if accept fails
+        }
+
+        printf("Server connected to client\n");
+
+        while (1) {
+            // Receive the string from the client
+            memset(buffer, 0, MAXSIZE);
+            int n = recv(client_sock, buffer, MAXSIZE - 1, 0);
+            if (n <= 0) {
+                printf("Client disconnected.\n");
+                close(client_sock);
+                break;
+            }
+
+            buffer[n] = '\0'; // Null-terminate the received string
+            printf("Received string: %s\n", buffer);
+
+            // If client sends "exit", close connection
+            if (strcmp(buffer, "exit") == 0) {
+                printf("Client requested to exit. Closing connection.\n");
+                close(client_sock);
+                break;
+            }
+
+            // Generate and send each permutation directly
+            permute(buffer, 0, strlen(buffer) - 1, client_sock);
+        }
     }
 
-    printf("Server connected to client\n");
-
-    // Receive the string from the client
-    int n = recv(client_sock, buffer, MAXSIZE - 1, 0);
-    if (n == -1) {
-        perror("Failed to receive data from client");
-        close(client_sock);
-        close(server_sock);
-        exit(1);
-    }
-    buffer[n] = '\0'; // Null-terminate the received string
-
-    printf("Received string: %s\n", buffer);
-
-    // Generate and send each permutation directly
-    permute(buffer, 0, strlen(buffer) - 1, client_sock);
-
-    // Close the client and server sockets
-    close(client_sock);
+    // Close the server socket (this line is unreachable but kept for completeness)
     close(server_sock);
     unlink(SOCKET_PATH);
-
     return 0;
 }
