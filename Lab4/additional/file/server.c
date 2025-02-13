@@ -38,7 +38,9 @@ void delete_book(char *title, int client_sock) {
     char line[MAXSIZE];
     int found = 0;
     while (fgets(line, MAXSIZE, file)) {
-        if (strstr(line, title) == line) {
+        char temp_title[MAXSIZE];
+        sscanf(line, "%s", temp_title); // Extract the first word (title)
+        if (strcmp(temp_title, title) == 0) {
             found = 1;
             continue;
         }
@@ -91,7 +93,7 @@ void search_book(char *query, int client_sock) {
     int found = 0;
 
     while (fgets(line, MAXSIZE, file)) {
-        if (strstr(line, query)) {
+        if (strcasestr(line, query)) { // Case-insensitive search
             strcat(buffer, line);
             found = 1;
         }
@@ -140,28 +142,28 @@ int main() {
             continue;
         }
 
-        // Receive client request
-        memset(buffer, 0, MAXSIZE);
-        recv(client_sock, buffer, MAXSIZE, 0);
+        printf("Client connected.\n");
 
-        // Process client request
-        if (strncmp(buffer, "INSERT", 6) == 0) {
-            insert_book(buffer + 7, client_sock);
-        } else if (strncmp(buffer, "DELETE", 6) == 0) {
-            delete_book(buffer + 7, client_sock);
-        } else if (strncmp(buffer, "DISPLAY", 7) == 0) {
-            display_books(client_sock);
-        } else if (strncmp(buffer, "SEARCH", 6) == 0) {
-            search_book(buffer + 7, client_sock);
-        } else if (strncmp(buffer, "EXIT", 4) == 0) {
-            send(client_sock, "Goodbye!\n", 9, 0);
-            close(client_sock);
-            break;
-        } else {
-            send(client_sock, "Invalid command.\n", 17, 0);
+        while (1) {
+            memset(buffer, 0, MAXSIZE);
+            recv(client_sock, buffer, MAXSIZE, 0);
+            
+            if (strncmp(buffer, "EXIT", 4) == 0) {
+                send(client_sock, "Goodbye!\n", 9, 0);
+                close(client_sock);
+                break;
+            } else if (strncmp(buffer, "INSERT", 6) == 0) {
+                insert_book(buffer + 7, client_sock);
+            } else if (strncmp(buffer, "DELETE", 6) == 0) {
+                delete_book(buffer + 7, client_sock);
+            } else if (strncmp(buffer, "DISPLAY", 7) == 0) {
+                display_books(client_sock);
+            } else if (strncmp(buffer, "SEARCH", 6) == 0) {
+                search_book(buffer + 7, client_sock);
+            } else {
+                send(client_sock, "Invalid command.\n", 17, 0);
+            }
         }
-
-        close(client_sock);
     }
 
     close(sockfd);
