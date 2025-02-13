@@ -1,0 +1,10 @@
+The Great Gatsby;F. Scott Fitzgerald;ACC001;180;Scribner
+To Kill a Mockingbird;Harper Lee;ACC002;281;J.B. Lippincott & Co.
+1984;George Orwell;ACC003;328;Secker & Warburg
+Moby Dick;Herman Melville;ACC004;635;Harper & Brothers
+Pride and Prejudice;Jane Austen;ACC005;432;T. Egerton
+The Catcher in the Rye;J.D. Salinger;ACC006;277;Little, Brown and Company
+The Hobbit;J.R.R. Tolkien;ACC007;310;George Allen & Unwin
+Brave New World;Aldous Huxley;ACC008;288;Chatto & Windus
+War and Peace;Leo Tolstoy;ACC009;1225;The Russian Messenger
+Crime and Punishment;Fyodor Dostoevsky;ACC010;671;The Russian Messenger
