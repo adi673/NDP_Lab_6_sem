@@ -1,0 +1,3 @@
+John_Doe CSE 6 A DSA,OS,DBMS
+Alice_Smith ECE 4 B Circuits,Maths,Signals
+Bob_Johnson ME 3 C Thermo,Statics,Dynamics
