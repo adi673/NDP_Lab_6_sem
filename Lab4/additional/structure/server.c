@@ -108,30 +108,30 @@ void display_books(int client_sock)
 
 // Function to search books by title or author
 void search_book(char *query, int client_sock) {
-    char buffer[MAXSIZE] = "";
+    char buffer[MAXSIZE] = "";  // Ensure buffer is empty
     int found = 0;
-    
+
     // Remove trailing newline (if any)
-    query[strcspn(query, "\n")] = 0;
+    query[strcspn(query, "\n")] = 0;  
 
     for (int i = 0; i < book_count; i++) {
         if (strcasecmp(books[i].title, query) == 0 || strcasecmp(books[i].author, query) == 0) {
             char book_info[256];
-            // snprintf(book_info, sizeof(book_info), 
-            //          "Title: %s, Author: %s, Accession No: %s, Pages: %d, Publisher: %s\n",
-            //          books[i].title, books[i].author, books[i].accession_number, 
-            //          books[i].total_pages, books[i].publisher);
             snprintf(book_info, sizeof(book_info), 
-                     "Title: %s, Author: %s, \n",
-                     books[i].title, books[i].author);
+                     "Title: %s, Author: %s, Accession No: %s, Pages: %d, Publisher: %s\n",
+                     books[i].title, books[i].author, books[i].accession_number, 
+                     books[i].total_pages, books[i].publisher);
+            printf("Book found: %s", book_info);
             strcat(buffer, book_info);
             found = 1;
         }
     }
-
-    if (!found)
+    
+    if (!found) {
         strcpy(buffer, "Book not found.\n");
+    }
 
+    // Ensure buffer has a valid response before sending
     send(client_sock, buffer, strlen(buffer), 0);
 }
 
