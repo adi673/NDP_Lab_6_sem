@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 
 #define PORT 3388
-#define MAXSIZE 1024
+#define MAXSIZE 
 
 int main() {
     int sockfd;
@@ -42,9 +42,15 @@ int main() {
             break;
         }
 
+        // Receive file content
         memset(buffer, 0, sizeof(buffer));
         recv(sockfd, buffer, sizeof(buffer), 0);
-        printf("Server Response:\n%s\n", buffer);
+        printf("File Content:\n%s\n", buffer);
+
+        // Receive file statistics
+        memset(buffer, 0, sizeof(buffer));
+        recv(sockfd, buffer, sizeof(buffer), 0);
+        printf("File Statistics:\n%s\n", buffer);
     }
 
     close(sockfd);
