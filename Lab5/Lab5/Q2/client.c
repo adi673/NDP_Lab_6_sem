@@ -43,7 +43,7 @@ int main() {
     // Send strings to server
     send(sockfd, str1, strlen(str1) + 1, 0);
     send(sockfd, str2, strlen(str2) + 1, 0);
-
+    printf("\nwaiting to receive anagram\n");
     // Receive result from server
     recv(sockfd, result, sizeof(result), 0);
     printf("Server Response: %s\n", result);
