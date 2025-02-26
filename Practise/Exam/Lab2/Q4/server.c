@@ -60,7 +60,7 @@ main()
     }
 
     serveraddr.sin_family = AF_INET;
-    serveraddr.sin_port = htons(3388);
+    serveraddr.sin_port = htons(3387);
     serveraddr.sin_addr.s_addr = htons(INADDR_ANY);
     retval = bind(sockfd, (struct sockaddr *)&serveraddr, sizeof(serveraddr));
     if (retval == 1)

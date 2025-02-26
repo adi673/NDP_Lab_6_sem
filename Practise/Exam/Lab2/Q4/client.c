@@ -23,7 +23,7 @@ main()
 	}
 
 	serveraddr.sin_family=AF_INET;
-	serveraddr.sin_port=htons(3388);
+	serveraddr.sin_port=htons(3387);
 	serveraddr.sin_addr.s_addr=inet_addr("127.0.0.1");
 	retval=connect(sockfd,(struct sockaddr*)&serveraddr,sizeof(serveraddr));
 	if(retval==-1)
