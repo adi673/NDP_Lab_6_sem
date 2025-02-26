@@ -52,8 +52,8 @@ main()
 			memset(buff,'\0',sizeof(buff));
 			printf("\n Enter Message to send : ");
 			fgets(buff, MAXSIZE, stdin);
-                        buff[strcspn(buff, "\n")] = '\0';
-			send(newsockfd, buff, sizeof(buff),0);
+            buff[strcspn(buff, "\n")] = '\0';
+			send(newsockfd, buff, strlen(buff),0);
 		}
     }else if(pid>0){
         while(1){
