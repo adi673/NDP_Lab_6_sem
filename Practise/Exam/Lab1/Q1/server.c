@@ -6,7 +6,53 @@
 #include<sys/types.h>
 #include<netinet/in.h>
 #define MAXSIZE 90
+int seatch(int key, int arr[], int size){
+	for (int i = 0; i < size; i++) {
+        if (arr[i] == key)
+            return i + 1;  // Returning 1-based index
+    }
+    return -1;
+}
 
+int sortAsc(int arr[], int size){
+	for(int i=0; i<size-1; i++){
+		for(int j=0; j<size-i-1; j++){
+			if(arr[j]>arr[j+1]){
+				int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+			}
+		}
+	}
+}
+
+void sortDesc(int arr[], int size) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (arr[j] < arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+} 
+
+void split(int arr[], int size, char *buff){
+	char odd[100]="Odd: ";
+	char event[100]="event: ";
+
+	for(int i=0; i<size; i++){
+		char num[100];
+		sprintf(num, "%d", arr[i]);
+		if(arr[i]%2==0){
+			strcat(even,num);
+		}else{
+			strcat(odd,num);
+		}
+	}
+	snprintf(buff, MAXSIZE, "%s\n%s",even,odd);
+}
 main()
 {
 	int sockfd,newsockfd,retval,i;
@@ -45,7 +91,7 @@ main()
 		close(sockfd);
 	}
 	int size;
-	recv(newsockfd,&size, sizeof(size));
+	recv(newsockfd,&size, sizeof(size),0);
 	int *arr=(int *)malloc(size * sizeof(int));
 	recv(newsockfd,arr, size* sizeof(int),0);
 
@@ -76,7 +122,7 @@ main()
 			}
 			case 2:{
 				sortAsc(arr,size);
-				sprintf(buff,"%s",arr)
+				sprintf(buff,"%s",arr);
 				for(i=0; i<size; i++){
 					char num;
 					sprintf(num, "%d", arr[i]);
