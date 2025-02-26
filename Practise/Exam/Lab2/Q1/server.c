@@ -5,7 +5,7 @@
 #include<sys/socket.h>
 #include<sys/types.h>
 #include<netinet/in.h>
-#define MAXSIZE 90
+#define MAXSIZE 200
 
 main()
 {
@@ -14,6 +14,7 @@ main()
 	int recedbytes,sentbytes;
 	struct sockaddr_in serveraddr,clientaddr;
 	char buff[MAXSIZE];
+	chat get[MAXSIZE];
 	
 	int a=0;
 	sockfd=socket(AF_INET,SOCK_STREAM,0);
@@ -44,10 +45,23 @@ main()
 	{
 		close(sockfd);
 	}
+	pid_t pid=fork();
 	
-	while(1){
-        
+    if(pid==0){
+		while(1){
+			memset(buff,'\0',sizeof(buff));
+			printf("\n Enter Message to send : ");
+			fgets(buff, MAXSIZE, stdin);
+			send(newsockfd, buff, sizeof(buff),0);
+		}
+    }else if(pid>0){
+        while(1){
+			memset(get,'\0',sizeof(get));
+			recv(newsockfd,get,sizeof(get),0);
+			printf("\n Message from client is : %s ",&get);
+		} 
     }
+    
 	close(sockfd);
 	close(newsockfd);
 }

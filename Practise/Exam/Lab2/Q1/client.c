@@ -12,6 +12,7 @@
 main()
 {
 	char buff[MAXSIZE];
+    char get[MAXSIZE];
 	int sockfd,retval,i;
 	int recedbytes,sentbytes;
 	struct sockaddr_in serveraddr;
@@ -31,9 +32,21 @@ main()
 		printf("Connection error");
 		return;
 	}
-
-	while(1){
-        
+    pid_t pid=fork();
+	
+    if(pid==0){
+		while(1){
+			memset(buff,'\0',sizeof(buff));
+			printf("\n Enter Message to send : ");
+			fgets(buff, MAXSIZE, stdin);
+			send(newsockfd, buff, sizeof(buff),0);
+		}
+    }else if(pid>0){
+        while(1){
+			memset(get,'\0',sizeof(get));
+			recv(newsockfd,get,sizeof(get),0);
+			printf("\n Message from client is : %s ",&get);
+		} 
     }
 	close(sockfd);
 }
