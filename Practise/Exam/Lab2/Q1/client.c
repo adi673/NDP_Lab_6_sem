@@ -39,12 +39,12 @@ main()
 			memset(buff,'\0',sizeof(buff));
 			printf("\n Enter Message to send : ");
 			fgets(buff, MAXSIZE, stdin);
-			send(newsockfd, buff, sizeof(buff),0);
+			send(sockfd, buff, sizeof(buff),0);
 		}
     }else if(pid>0){
         while(1){
 			memset(get,'\0',sizeof(get));
-			recv(newsockfd,get,sizeof(get),0);
+			recv(sockfd,get,sizeof(get),0);
 			printf("\n Message from client is : %s ",&get);
 		} 
     }

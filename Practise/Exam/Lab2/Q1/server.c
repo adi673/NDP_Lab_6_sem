@@ -14,7 +14,7 @@ main()
 	int recedbytes,sentbytes;
 	struct sockaddr_in serveraddr,clientaddr;
 	char buff[MAXSIZE];
-	chat get[MAXSIZE];
+	char get[MAXSIZE];
 	
 	int a=0;
 	sockfd=socket(AF_INET,SOCK_STREAM,0);
