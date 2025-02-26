@@ -34,11 +34,12 @@ main()
     char resp[200];
 	while(1){
         memset(buff,'\0',sizeof(buff));
-        fgets(buff,sizeoof(buff),stdin);
+        fgets(buff,sizeof(buff),stdin);
         buff[strcspn(buff, "\n")] = '\0'; // Remove newline
         send(sockfd,buff,sizeof(buff),0);
         memset(resp,'\0',sizeof(resp));
         recv(sockfd,resp,sizeof(resp),0);
+	printf("%s",resp);
     }
 	close(sockfd);
 }

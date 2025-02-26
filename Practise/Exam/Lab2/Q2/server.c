@@ -16,13 +16,13 @@ void swap(char *x, char *y) {
 void permute(char *str, int l, int r, char *resp) {
     if (l == r) {
         printf("%s\n", str);
-        strcar(resp,str);
+        strcat(resp,str);
         strcat(resp, "\n"); // Add newline for better readability
         return;
     }
     for (int i = l; i <= r; i++) {
         swap(&str[l], &str[i]);
-        permute(str, l + 1, r);
+        permute(str, l + 1, r,resp);
         swap(&str[l], &str[i]);  // Backtrack
     }
 }
