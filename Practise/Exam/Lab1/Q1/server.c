@@ -45,14 +45,14 @@ main()
 		close(sockfd);
 	}
 	int size;
-	recv(sockfd,&size, sizeof(size));
+	recv(newsockfd,&size, sizeof(size));
 	int *arr=(int *)malloc(size * sizeof(int));
-	recv(sockfd,arr, size* sizeof(int),0);
+	recv(newsockfd,arr, size* sizeof(int),0);
 
 	int option;
 	while(1){
 		memset(buff, '\0', sizeof(buff));
-		recv(sockfd, &option, sizeof(option),0);
+		recv(newsockfd, &option, sizeof(option),0);
 
 		if (option == 4) {
             printf("Client disconnected\n");
@@ -62,7 +62,7 @@ main()
 		switch(option){
 			case 1:{
 				int search;
-				recv(sockfd, &search, sizeof(search),0);
+				recv(newsockfd, &search, sizeof(search),0);
 				int val=search(search,arr,size);
 				if(val==-1){
 					snprintf(buff,sizeof(buff),"not found");
