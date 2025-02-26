@@ -87,7 +87,7 @@ main()
 			}
 			case 3:{
 				split(arr,size,buff);
-				send(nenwsockfd,buff,sizeof(buff),0);
+				send(newsockfd,buff,sizeof(buff),0);
 				break;
 			}
 		}
