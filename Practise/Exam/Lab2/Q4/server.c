@@ -99,8 +99,10 @@ main()
         printf("Received matrixs \n");
         for(int i=0; i<row; i++){
             for(int j=0; j<col; j++){
-                matrix[i][j]=matrix[i][j]*2;
+                matrix[i][j]=(matrix[i][j])*2;
+                printf(" %d ",matrix[i][j]);
             }
+            printf("\n");
         }
         printf("sending abck matrixs \n");
         send(newsockfd,matrix[0],row*col*sizeof(int),0);
