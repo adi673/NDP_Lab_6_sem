@@ -58,7 +58,7 @@ main()
         while(1){
 			memset(get,'\0',sizeof(get));
 			recv(newsockfd,get,sizeof(get),0);
-			printf("\n Message from client is : %s ",&get);
+			printf("\n Message from client is : %s ",get);
 		} 
     }
     
