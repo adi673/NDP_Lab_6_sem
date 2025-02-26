@@ -88,20 +88,21 @@ main()
         recv(newsockfd, &row, sizeof(int), 0);
         recv(newsockfd, &col, sizeof(int), 0);
 
-        
+        printf("Received cols and rows \n");
 
         int** matrix= (int **)malloc(row*sizeof(int*));
         for(int i=0 ;i<row; i++){
             matrix[i]=(int*)malloc(col*sizeof(int));
         }
+        printf("Receiving matrixs \n");
         recv(newsockfd, matrix[0], row * col * sizeof(int), 0);
-        
+        printf("Received matrixs \n");
         for(int i=0; i<row; i++){
             for(int j=0; j<col; j++){
                 matrix[i][j]=matrix[i][j]*2;
             }
         }
-
+        printf("sending abck matrixs \n");
         send(newsockfd,matrix[0],row*col*sizeof(int),0);
     }
     close(sockfd);

@@ -50,8 +50,9 @@ main()
             }
             
         }
+        printf("\n sending matrix\n");
         send(sockfd,matrix[0], col*row*sizeof(int),0);
-
+        printf("\nsent matrix\n");
         
         int** matrix2 = (int **)malloc(row * sizeof(int *)); 
         for (int i = 0; i < row; i++) {
