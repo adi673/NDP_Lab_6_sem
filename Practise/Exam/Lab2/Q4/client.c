@@ -48,7 +48,7 @@ main()
 
         
         int** matrix2 = (int **)malloc(row * sizeof(int *)); 
-        for (int i = 0; i < rows; i++) {
+        for (int i = 0; i < row; i++) {
             matrix2[i] = (int *)malloc(col * sizeof(int)); 
         }
         recv(sockfd,matrix2[0],col*row*sizeof(int),0);
