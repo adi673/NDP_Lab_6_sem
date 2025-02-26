@@ -96,7 +96,14 @@ main()
         }
         printf("Receiving matrixs \n");
         recv(newsockfd, matrix[0], row * col * sizeof(int), 0);
-        printf("Received matrixs \n");
+        for(int i=0; i<row; i++){
+            for(int j=0; j<col; j++){
+                matrix[i][j]=(matrix[i][j])*2;
+                printf(" %d ",matrix[i][j]);
+            }
+            printf("\n");
+        }
+        printf("\nReceived matrixs \n");
         for(int i=0; i<row; i++){
             for(int j=0; j<col; j++){
                 matrix[i][j]=(matrix[i][j])*2;
