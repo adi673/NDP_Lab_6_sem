@@ -57,8 +57,8 @@ main()
         recv(sockfd, matrix2, row * col * sizeof(int), 0);
 
 
-        recv(sockfd,matrix2,col*row*sizeof(int),0);
-        printf("\n got second backl\n");
+      
+        printf("\n got second backl\n")
         for(int i=0; i<row; i++){
             for(int j=0; j<col; j++){
                 printf("%d ", matrix2[i * col + j]);
