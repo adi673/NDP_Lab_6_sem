@@ -11,9 +11,10 @@ int palindrome(char buff[])
 {
     int len = strlen(buff);
     int i = 0;
-    while (i < len / 2)
+    while (i < (len-1) / 2)
     {
-        if (buff[i] != buff[len - i - 1])
+	printf(" %c %c \n",buff[i],buff[len-i-2]);
+        if (buff[i] != buff[len - i - 2])
         {
             return 0;
         }
@@ -26,7 +27,7 @@ void count(char buff[], char output[])
 {
     int *arr = (int *)malloc(5 * sizeof(int));
     int len = strlen(buff);
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < len-1; i++)
     {
 
         if (buff[i] == 'A' || buff[i] == 'a')
@@ -112,7 +113,8 @@ main()
     {
         close(sockfd);
     }
-    memset(buff, '\0', sizeof(buff)) while (1)
+    memset(buff, '\0', sizeof(buff));
+    while (1)
     {
         recv(newsockfd, buff, sizeof(buff), 0);
         memset(output, '\0', sizeof(output));
