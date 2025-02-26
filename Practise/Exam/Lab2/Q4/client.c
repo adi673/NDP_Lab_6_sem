@@ -46,7 +46,7 @@ main()
         }
         for(int i=0; i<row; i++){
             for(int j=0; j<col; j++){
-                scanf("%d ",matrix[i][j]);
+               scanf("%d", &matrix[i][j]);
             }
             
         }
@@ -60,7 +60,7 @@ main()
         recv(sockfd,matrix2[0],col*row*sizeof(int),0);
         for(int i=0; i<row; i++){
             for(int j=0; j<col; j++){
-                printf("%d ",matrix2[i][j]);
+                printf("%d ", matrix[i][j]);
             }
             printf("\n");
         }
