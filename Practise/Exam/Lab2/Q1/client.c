@@ -41,7 +41,6 @@ main()
             memset(buff, '\0', sizeof(buff));
             printf("\n Enter Message to send : ");
             fgets(buff, MAXSIZE, stdin);
-	        buff[strcspn(buff, "\n")] = '\0';
             send(sockfd, buff, sizeof(buff), 0);
         }
     }
@@ -50,9 +49,22 @@ main()
         while (1)
         {
             memset(get, '\0', sizeof(get)); // Clear buffer
-            recv(sockfd, get, sizeof(get) - 1, 0);
-            printf("\n Message from server is : %s", get);
-            
+            int bytes_received = recv(sockfd, get, sizeof(get) - 1, 0);
+
+            if (bytes_received > 0)
+            { // Only print if valid data is received
+                printf("\n Message from server is : %s", get);
+            }
+            else if (bytes_received == 0)
+            { // Connection closed
+                printf("\n Server disconnected.\n");
+                break;
+            }
+            else
+            { // Error case
+                perror("recv error");
+                break;
+            }
         }
     }
     close(sockfd);

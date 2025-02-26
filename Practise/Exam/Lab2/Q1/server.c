@@ -48,14 +48,15 @@ main()
 	pid_t pid=fork();
 	
     if(pid==0){
+		printf("[Server Child] PID: %d | PPID: %d\n", getpid(), getppid());
 		while(1){
 			memset(buff,'\0',sizeof(buff));
 			printf("\n Enter Message to send : ");
 			fgets(buff, MAXSIZE, stdin);
-            buff[strcspn(buff, "\n")] = '\0';
 			send(newsockfd, buff, sizeof(buff),0);
 		}
     }else if(pid>0){
+	printf("[Server Child] PID: %d | PPID: %d\n", getpid(), getppid());
         while(1){
 			memset(get,'\0',sizeof(get));
 			recv(newsockfd,get,sizeof(get),0);
@@ -66,4 +67,3 @@ main()
 	close(sockfd);
 	close(newsockfd);
 }
-
