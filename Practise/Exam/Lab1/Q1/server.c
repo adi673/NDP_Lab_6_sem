@@ -6,7 +6,7 @@
 #include<sys/types.h>
 #include<netinet/in.h>
 #define MAXSIZE 90
-int seatchArr(int key, int arr[], int size){
+int searchArr(int key, int arr[], int size){
 	for (int i = 0; i < size; i++) {
         if (arr[i] == key)
             return i + 1;  // Returning 1-based index
@@ -14,16 +14,16 @@ int seatchArr(int key, int arr[], int size){
     return -1;
 }
 
-int sortAsc(int arr[], int size){
-	for(int i=0; i<size-1; i++){
-		for(int j=0; j<size-i-1; j++){
-			if(arr[j]>arr[j+1]){
-				int temp = arr[j];
+void sortAsc(int arr[], int size) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = temp;
-			}
-		}
-	}
+            }
+        }
+    }
 }
 
 void sortDesc(int arr[], int size) {
@@ -120,16 +120,21 @@ main()
 				send(newsockfd, buff, sizeof(buff), 0);
 				break;
 			}
-			case 2:{
-				sortAsc(arr,size);
-				sprintf(buff,"%s",arr);
-				for(i=0; i<size; i++){
-					char num;
-					sprintf(num, "%d", arr[i]);
-					strcar(buff,num);
-				}
-				send(newsockfd,buff,sizeof(buff),0);
-				break;
+			case 2: {
+    				printf("\n Sorting started\n");
+    				sortAsc(arr, size);
+
+    				memset(buff, '\0', sizeof(buff));  // Clear buffer before use
+    				strcpy(buff, "Sorted Array: ");
+
+    				for (int i = 0; i < size; i++) {
+        				char num[20];  // Buffer for integer conversion
+        				sprintf(num, "%d ", arr[i]);  // Convert int to string
+        				strcat(buff, num);  // Append number to buffer
+    				}
+
+    				send(newsockfd, buff, sizeof(buff), 0);
+    				break;
 			}
 			case 3:{
 				split(arr,size,buff);
