@@ -50,22 +50,9 @@ main()
         while (1)
         {
             memset(get, '\0', sizeof(get)); // Clear buffer
-            int bytes_received = recv(sockfd, get, sizeof(get) - 1, 0);
-
-            if (bytes_received > 0)
-            { // Only print if valid data is received
-                printf("\n Message from server is : %s", get);
-            }
-            else if (bytes_received == 0)
-            { // Connection closed
-                printf("\n Server disconnected.\n");
-                break;
-            }
-            else
-            { // Error case
-                perror("recv error");
-                break;
-            }
+            recv(sockfd, get, sizeof(get) - 1, 0);
+            printf("\n Message from server is : %s", get);
+            
         }
     }
     close(sockfd);
