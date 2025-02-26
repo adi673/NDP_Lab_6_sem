@@ -37,12 +37,12 @@ main()
         scanf("%d",&row);
         scanf("%d",&col);
 
-        send(scokfd, &row, sizeof(int), 0);
-        send(scokfd, &col, sizeof(int), 0);
+        send(sockfd, &row, sizeof(int), 0);
+        send(sockfd, &col, sizeof(int), 0);
 
-        int** matrix = (int **)malloc(rows * sizeof(int *)); 
+        int** matrix = (int **)malloc(row * sizeof(int *)); 
         for (int i = 0; i < rows; i++) {
-            matrix[i] = (int *)malloc(cols * sizeof(int)); 
+            matrix[i] = (int *)malloc(col * sizeof(int)); 
         }
         send(sockfd,matrix[0], col*row*sizeof(int),0);
 
@@ -51,7 +51,7 @@ main()
         for (int i = 0; i < rows; i++) {
             matrix2[i] = (int *)malloc(cols * sizeof(int)); 
         }
-        recv(sockfd,matrix2[0],col*row*sizeof(int));
+        recv(sockfd,matrix2[0],col*row*sizeof(int),0);
         for(int i=0; i<row; i++){
             for(int j=0; j<col; j++){
                 printf("%d ",matrix[i][j]);
