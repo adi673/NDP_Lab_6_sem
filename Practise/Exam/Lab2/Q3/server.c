@@ -39,7 +39,7 @@ void process( char buff[], char resp1[], char resp2[]){
     memset(chars,'\0',sizeof(chars));
     int digitIndex=0;
     int charIndex=0;
-    for(int i=0; buff[i]!='\0',i++){
+    for(int i=0; buff[i]!='\0';i++){
         if(isdigit(buff[i])){
             digits[digitIndex++]=buff[i];
         }else if(isalpha(buff[i])){
@@ -98,7 +98,7 @@ main()
 	char resp1[200];
     char resp2[200];
 	while(1){
-        memset(buff,'\0',stdin);
+        memset(buff,'\0',sizeof(buff));
         recv(newsockfd,buff,sizeof(buff),0);
         memset(resp1,'\0',sizeof(resp1));
         memset(resp2,'\0',sizeof(resp2));
