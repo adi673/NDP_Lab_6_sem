@@ -41,15 +41,15 @@ main()
         send(sockfd, &col, sizeof(int), 0);
 
         int** matrix = (int **)malloc(row * sizeof(int *)); 
-        for (int i = 0; i < rows; i++) {
+        for (int i = 0; i < row; i++) {
             matrix[i] = (int *)malloc(col * sizeof(int)); 
         }
         send(sockfd,matrix[0], col*row*sizeof(int),0);
 
         
-        int** matrix2 = (int **)malloc(rows * sizeof(int *)); 
+        int** matrix2 = (int **)malloc(row * sizeof(int *)); 
         for (int i = 0; i < rows; i++) {
-            matrix2[i] = (int *)malloc(cols * sizeof(int)); 
+            matrix2[i] = (int *)malloc(col * sizeof(int)); 
         }
         recv(sockfd,matrix2[0],col*row*sizeof(int),0);
         for(int i=0; i<row; i++){
