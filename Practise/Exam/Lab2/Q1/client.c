@@ -41,6 +41,7 @@ main()
             memset(buff, '\0', sizeof(buff));
             printf("\n Enter Message to send : ");
             fgets(buff, MAXSIZE, stdin);
+	    buff[strcspn(buff, "\n")] = '\0';
             send(sockfd, buff, sizeof(buff), 0);
         }
     }
