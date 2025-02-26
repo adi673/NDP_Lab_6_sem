@@ -6,7 +6,7 @@
 #include<sys/types.h>
 #include<netinet/in.h>
 #define MAXSIZE 90
-int seatch(int key, int arr[], int size){
+int seatchArr(int key, int arr[], int size){
 	for (int i = 0; i < size; i++) {
         if (arr[i] == key)
             return i + 1;  // Returning 1-based index
@@ -109,7 +109,7 @@ main()
 			case 1:{
 				int search;
 				recv(newsockfd, &search, sizeof(search),0);
-				int val=search(search,arr,size);
+				int val=searchArr(search,arr,size);
 				if(val==-1){
 					snprintf(buff,sizeof(buff),"not found");
 					
