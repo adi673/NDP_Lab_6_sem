@@ -40,7 +40,7 @@ void sortDesc(int arr[], int size) {
 
 void split(int arr[], int size, char *buff){
 	char odd[100]="Odd: ";
-	char event[100]="event: ";
+	char even[100]="event: ";
 
 	for(int i=0; i<size; i++){
 		char num[100];
