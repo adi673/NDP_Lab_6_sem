@@ -37,8 +37,8 @@ main()
         scanf("%d",&row);
         scanf("%d",&col);
 
-        send(newscokfd, &row, sizeof(int), 0);
-        send(newscokfd, &col, sizeof(int), 0);
+        send(scokfd, &row, sizeof(int), 0);
+        send(scokfd, &col, sizeof(int), 0);
 
         int** matrix = (int **)malloc(rows * sizeof(int *)); 
         for (int i = 0; i < rows; i++) {

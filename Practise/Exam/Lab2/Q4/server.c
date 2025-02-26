@@ -85,8 +85,8 @@ main()
     {
         
 
-        recv(scokfd, &row, sizeof(int), 0);
-        recv(scokfd, &col, sizeof(int), 0);
+        recv(newsockfd, &row, sizeof(int), 0);
+        recv(newsockfd, &col, sizeof(int), 0);
 
         int** matrix= (int **)malloc(row*sizeof(int*));
         for(int i=0 ;i<row; i++){
