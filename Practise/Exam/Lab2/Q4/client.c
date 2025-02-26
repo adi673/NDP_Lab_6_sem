@@ -40,28 +40,27 @@ main()
         send(sockfd, &row, sizeof(int), 0);
         send(sockfd, &col, sizeof(int), 0);
 
-        int** matrix = (int **)malloc(row * sizeof(int *)); 
+        int *matrix = (int *)malloc(row * col * sizeof(int)); 
+        
+        printf("Enter matrix elements:\n");
         for (int i = 0; i < row; i++) {
-            matrix[i] = (int *)malloc(col * sizeof(int)); 
-        }
-        for(int i=0; i<row; i++){
-            for(int j=0; j<col; j++){
-               scanf("%d", &matrix[i][j]);
+            for (int j = 0; j < col; j++) {
+                scanf("%d", &matrix[i * col + j]);
             }
-            
         }
+
         printf("\n sending matrix\n");
-        send(sockfd,matrix[0], col*row*sizeof(int),0);
+        send(sockfd,matrix, col*row*sizeof(int),0);
         printf("\nsent matrix\n");
         
-        int** matrix2 = (int **)malloc(row * sizeof(int *)); 
-        for (int i = 0; i < row; i++) {
-            matrix2[i] = (int *)malloc(col * sizeof(int)); 
-        }
-        recv(sockfd,matrix2[0],col*row*sizeof(int),0);
+        int *matrix2 = (int *)malloc(row * col * sizeof(int));
+        recv(sockfd, matrix2, row * col * sizeof(int), 0);
+
+
+        recv(sockfd,matrix2,col*row*sizeof(int),0);
         for(int i=0; i<row; i++){
             for(int j=0; j<col; j++){
-                printf("%d ", matrix2[i][j]);
+                printf("%d ", matrix2[i * col + j]);
             }
             printf("\n");
         }
