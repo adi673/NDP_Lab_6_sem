@@ -118,7 +118,7 @@ main()
             wait(NULL);
             sortDsc(chars);
             sprintf(resp2, "ParentProcess [%d] %s", getpid(), chars);
-            send(newsockfd, resp2, sizeof(resp2), 0)
+            send(newsockfd, resp2, sizeof(resp2), 0);
         }
         
         
