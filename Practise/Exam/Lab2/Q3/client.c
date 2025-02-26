@@ -36,7 +36,7 @@ main()
 	while(1){
         memset(buff,'\0',sizeof(buff));
         printf("\n Enter alphanumeric String : ");
-        fget(buff,sizeof(buff),stdin);
+        fgets(buff,sizeof(buff),stdin);
         buff[strcspn(buff,"\n")]="\0";
         send(sockfd,buff,sizeof(buff),0);
         memset(resp1,'\0',sizeof(resp1));
