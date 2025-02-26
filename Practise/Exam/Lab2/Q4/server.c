@@ -105,7 +105,7 @@ main()
         printf("\nReceived matrixs \n");
         for(int i=0; i<row; i++){
             for(int j=0; j<col; j++){
-                matrix[i][j]=(matrix[i * col + j])*2;
+                matrix[i * col + j]=(matrix[i * col + j])*2;
                 printf("%d ", matrix[i * col + j]);
             }
             printf("\n");
